@@ -27,13 +27,13 @@ export function Header() {
         <Link href={`/${locale}`} className="flex items-center gap-3 no-underline">
           <Image
             src="/logo-astro-club-300x300.png"
-            alt="Astro Club Logo"
+            alt="Ollis Astro Club logo"
             width={48}
             height={48}
             className="rounded-full"
           />
-          <span className="font-heading text-xl font-bold text-[var(--foreground)]">
-            Astro&#8209;Club
+          <span className="brand-name font-heading text-xl font-bold text-[var(--foreground)]">
+            Ollis Astro Club
           </span>
         </Link>
 
