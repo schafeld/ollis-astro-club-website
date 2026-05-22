@@ -23,7 +23,6 @@ jobs:
             pm2 stop ollis-astro-club 2>/dev/null || true
             git pull origin main
             npm ci
-            npm run build-storybook
             npm run build
             pm2 delete ollis-astro-club 2>/dev/null || true
             pm2 start npm --name "ollis-astro-club" -- start

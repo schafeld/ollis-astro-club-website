@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+/* ===== Design System Tokens (from AI_DOCS/DESIGN.md) ===== */
+
+@theme inline {
+  /* Colors – Light Mode (Hand-drawn paper aesthetic) */
+  --color-paper: #fdfbf7;
+  --color-pencil: #2d2d2d;
+  --color-muted: #e5e0d8;
+  --color-accent: #ff4d4d;
+  --color-accent-blue: #2d5da1;
+  --color-border: #2d2d2d;
+
+  /* Dark Mode Colors */
+  --color-paper-dark: #1a1a2e;
+  --color-pencil-dark: #e5e0d8;
+  --color-muted-dark: #2d2d3d;
+  --color-accent-dark: #ff6b6b;
+  --color-accent-blue-dark: #5b9bd5;
+  --color-border-dark: #e5e0d8;
+
+  /* Fonts */
+  --font-heading: var(--font-kalam);
+  --font-body: var(--font-patrick-hand);
+
+  /* Hard Offset Shadows (no blur) */
+  --shadow-sketch: 4px 4px 0px 0px #2d2d2d;
+  --shadow-sketch-lg: 8px 8px 0px 0px #2d2d2d;
+  --shadow-sketch-sm: 2px 2px 0px 0px #2d2d2d;
+  --shadow-sketch-hover: 2px 2px 0px 0px #2d2d2d;
+}
+
+/* ===== Light Mode (default) ===== */
+:root {
+  --background: var(--color-paper);
+  --foreground: var(--color-pencil);
+  --muted: var(--color-muted);
+  --accent: var(--color-accent);
+  --accent-blue: var(--color-accent-blue);
+  --border-color: var(--color-border);
+  --shadow-color: #2d2d2d;
+}
+
+/* ===== Dark Mode ===== */
+.dark {
+  --background: var(--color-paper-dark);
+  --foreground: var(--color-pencil-dark);
+  --muted: var(--color-muted-dark);
+  --accent: var(--color-accent-dark);
+  --accent-blue: var(--color-accent-blue-dark);
+  --border-color: var(--color-border-dark);
+  --shadow-color: #e5e0d8;
+}
+
+/* ===== Wobbly Border Radius Presets ===== */
+.wobbly {
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+}
+.wobbly-md {
+  border-radius: 15px 225px 15px 255px / 255px 15px 225px 15px;
+}
+.wobbly-sm {
+  border-radius: 225px 15px 255px 15px / 15px 255px 15px 225px;
+}
+.wobbly-pill {
+  border-radius: 255px 25px 225px 25px / 25px 225px 25px 255px;
+}
+
+/* ===== Global Styles ===== */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), cursive, sans-serif;
+  background-image: radial-gradient(var(--muted) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading), cursive, sans-serif;
+}
+
+/* Smooth theme transitions */
+body, body * {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Custom layout utilities */
+.brand-name {
+  white-space: nowrap;
+}

@@ -2,13 +2,13 @@
 
 ## Purpose
 
-This directory contains the parallel Nuxt 4 migration target for Ollis Astro Club. It is the future Vue/Nuxt frontend and should be treated as the primary implementation target for ongoing migration work, while the sibling Next.js app remains the behavioral reference until cutover.
+This repository root now contains the primary Nuxt 4 application for Ollis Astro Club. The old Next.js app lives in `ollis-astro-club-next-js/` and remains available as a behavioral reference during the final migration tail.
 
 ## Project Scope
 
 - Framework: Nuxt 4 with Vue 3 and TypeScript
-- Design system: shared hand-drawn styling loaded from the parent app at `../app/globals.css`
-- i18n: German and English via `@nuxtjs/i18n`, with translations imported from `../messages/de.json` and `../messages/en.json`
+- Design system: hand-drawn styling loaded from `app/globals.css`
+- i18n: German and English via `@nuxtjs/i18n`, with translations imported from `messages/de.json` and `messages/en.json`
 - CMS: Sanity content fetched through the local `lib/sanity/*` layer
 - Theme: `@nuxtjs/color-mode`
 
@@ -17,6 +17,7 @@ This directory contains the parallel Nuxt 4 migration target for Ollis Astro Clu
 - `npm install` installs the Nuxt app dependencies.
 - `npm run dev` starts the Nuxt dev server.
 - `npm run build` is the required validation command after any meaningful route or config change.
+- `npm run start` serves the built Nuxt Nitro server and is the command used by PM2 in deployment.
 - `npm run preview` runs the production output locally.
 
 ## Current Architecture
@@ -32,10 +33,10 @@ This directory contains the parallel Nuxt 4 migration target for Ollis Astro Clu
 ## Migration Rules
 
 - Prefer implementing new work in this Nuxt app instead of the old Next.js app.
-- Use the old Next.js pages only as the source of behavior, copy, and route shape.
+- Use the old Next.js pages in `ollis-astro-club-next-js/` only as the source of behavior, copy, and route shape.
 - Preserve locale-prefixed routes such as `/de/news` and `/en/news`.
-- Keep the separate Sanity Studio workflow unchanged. The schema source of truth still lives in the parent repo under `lib/sanity/schemas/`.
-- Reuse the existing translation JSON files from the parent repo instead of duplicating messages inside the Nuxt app.
+- Keep the separate Sanity Studio workflow unchanged. The schema source of truth for the old Next app still lives in `ollis-astro-club-next-js/lib/sanity/schemas/`.
+- Translation JSON files are now local to the Nuxt root under `messages/`.
 - Reuse the existing logo asset name: `/logo-astro-club-300x300.png`.
 
 ## Nuxt-Specific Notes
@@ -46,6 +47,7 @@ This directory contains the parallel Nuxt 4 migration target for Ollis Astro Clu
   - `NUXT_PUBLIC_SANITY_PROJECT_ID` or `NEXT_PUBLIC_SANITY_PROJECT_ID`
   - `NUXT_PUBLIC_SANITY_DATASET` or `NEXT_PUBLIC_SANITY_DATASET`
   - `NUXT_PUBLIC_SANITY_API_VERSION` or `NEXT_PUBLIC_SANITY_API_VERSION`
+- Root `.env.local` is loaded directly by the Nuxt config so deployment and local development can keep using the repo-root env file.
 - NASA APOD uses the server-only `NASA_API_KEY` runtime config entry.
 - Content pages should use `useAsyncData()` with the local Sanity helpers instead of calling the client directly in templates.
 - Rich text should render through `app/components/sanity/PortableTextRenderer.vue`.
@@ -82,4 +84,5 @@ Still pending or partial:
 
 - Make small, validated slices. Add a route or helper, then run `npm run build` before broadening scope.
 - Avoid changing the Next.js app unless the change is required to understand or mirror existing behavior.
+- If you need the legacy app, work inside `ollis-astro-club-next-js/` explicitly instead of assuming the repo root is Next.js.
 - Update this file when the architecture, commands, migration status, or validation expectations change.

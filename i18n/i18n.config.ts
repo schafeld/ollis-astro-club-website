@@ -1,5 +1,5 @@
-import de from '../../messages/de.json';
-import en from '../../messages/en.json';
+import de from '../messages/de.json';
+import en from '../messages/en.json';
 
 export default defineI18nConfig(() => ({
   legacy: false,
