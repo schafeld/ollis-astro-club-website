@@ -2,165 +2,153 @@
 
 ## Overview
 
-This project requires several API keys and secrets for authentication, CMS, and external APIs. This document explains how to configure them locally and on the Ionos VPS production server.
+The deployed website is now the Nuxt 4 app at the repository root. Production builds create a Nitro server, and PM2 runs that server via `npm run start`.
 
-## Local Development
+The GitHub Actions workflow in `.github/workflows/deploy.yml` deploys by SSH to the Ionos VPS, pulls the latest code, runs `npm ci`, builds the Nuxt app, and restarts PM2.
 
-Copy `.env.local` (already provided in the repo root) and fill in the values:
+## Production Runtime Model
 
-```bash
-cp .env.local .env.local  # already exists, just edit it
-```
-
-For local development, the Auth0 dummy admin works without real credentials — the app detects unconfigured Auth0 env vars and falls back to a hardcoded dev admin.
+- Project path on server: `/var/www/ollis-astro-club`
+- PM2 process name: `ollis-astro-club`
+- Build command: `npm run build`
+- Start command: `npm run start`
+- Actual server entrypoint: `node .output/server/index.mjs`
 
 ## Environment Variables Reference
 
 | Variable | Required | Description |
 |---|---|---|
-| `AUTH0_SECRET` | Yes | Random string (min 32 chars) for session encryption. Generate with: `openssl rand -hex 32` |
-| `AUTH0_DOMAIN` | Yes | Your Auth0 tenant domain (e.g., `your-tenant.eu.auth0.com`) |
-| `AUTH0_CLIENT_ID` | Yes | Auth0 application Client ID |
-| `AUTH0_CLIENT_SECRET` | Yes | Auth0 application Client Secret |
-| `APP_BASE_URL` | Yes | Your app's base URL (`http://localhost:3000` locally, `https://www.ollis-astro-club.com` in prod) |
-| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Later | Sanity project ID |
-| `NEXT_PUBLIC_SANITY_DATASET` | Later | Sanity dataset name (usually `production`) |
-| `SANITY_API_TOKEN` | Later | Sanity API token (read access) |
-| `NASA_API_KEY` | Later | NASA API key (free at https://api.nasa.gov) |
-| `DATABASE_URL` | Later | MySQL connection string for Ionos VPS |
-| `NEXT_PUBLIC_SITE_URL` | Yes | Public site URL |
+| `AUTH0_SECRET` | Later | Reserved for future Auth0 integration in Nuxt |
+| `AUTH0_DOMAIN` | Later | Future Auth0 tenant domain |
+| `AUTH0_CLIENT_ID` | Later | Future Auth0 app client ID |
+| `AUTH0_CLIENT_SECRET` | Later | Future Auth0 app client secret |
+| `APP_BASE_URL` | Later | Future auth callback base URL |
+| `NUXT_PUBLIC_SANITY_PROJECT_ID` or `NEXT_PUBLIC_SANITY_PROJECT_ID` | Yes, if Sanity is active | Sanity project ID |
+| `NUXT_PUBLIC_SANITY_DATASET` or `NEXT_PUBLIC_SANITY_DATASET` | Yes, if Sanity is active | Sanity dataset name |
+| `NUXT_PUBLIC_SANITY_API_VERSION` or `NEXT_PUBLIC_SANITY_API_VERSION` | No | Optional Sanity API version override |
+| `SANITY_API_TOKEN` | Optional | Needed only for server-side mutations or tooling |
+| `NASA_API_KEY` | Recommended | NASA API key for APOD; `DEMO_KEY` fallback is used in dev if missing |
+| `DATABASE_URL` | Later | Reserved for future database-backed features |
+| `NEXT_PUBLIC_SITE_URL` | Recommended | Public site URL retained for compatibility |
 
-## Pre-Deployment Checklist
+## Important Build-Time Behavior
 
-Before merging the development branch to `main` and pushing, make sure all environment variables are in place on the server. This only needs to be done **once** (or when new variables are added).
+Sanity public config is embedded into the client bundle at build time. After changing any of these values, rebuild the app and restart PM2:
 
-**Required before first deployment:**
+- `NUXT_PUBLIC_SANITY_PROJECT_ID`
+- `NUXT_PUBLIC_SANITY_DATASET`
+- `NUXT_PUBLIC_SANITY_API_VERSION`
+- `NEXT_PUBLIC_SANITY_PROJECT_ID`
+- `NEXT_PUBLIC_SANITY_DATASET`
+- `NEXT_PUBLIC_SANITY_API_VERSION`
 
-- [ ] `AUTH0_SECRET` — generated and set on server
-- [ ] `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, `AUTH0_CLIENT_SECRET` — Auth0 app configured
-- [ ] `APP_BASE_URL` set to `https://www.ollis-astro-club.com`
-- [ ] `NEXT_PUBLIC_SITE_URL` set to `https://www.ollis-astro-club.com`
-- [ ] `NEXT_PUBLIC_SANITY_PROJECT_ID` and `NEXT_PUBLIC_SANITY_DATASET` set (if Sanity is active)
-- [ ] `NASA_API_KEY` set (if NASA live data pages are active)
+`NASA_API_KEY` is read through Nuxt runtime config and also requires a rebuild in the current deployment flow because the app is rebuilt on deploy and started as a compiled Nitro server.
 
-**Important:** `NEXT_PUBLIC_*` variables are embedded into the client-side bundle **at build time**. If you change them, you must rebuild (`npm run build`) and restart PM2 — they are not picked up at runtime.
+## Local Development
 
----
+Edit the existing root `.env.local` file.
 
-## Setting Up Environment Variables on the Ionos VPS
+The root `nuxt.config.ts` explicitly loads `.env.local` and `.env`, so local development and production both use the same root env file layout.
 
-The app runs as `ollis-astro-club` under PM2 (as user `deploy`) at `/var/www/ollis-astro-club`. Next.js reads `.env.local` automatically from the project root at startup.
+Example:
 
-### 1. SSH into the VPS
+```dotenv
+# Sanity
+NEXT_PUBLIC_SANITY_PROJECT_ID=f18pduhr
+NEXT_PUBLIC_SANITY_DATASET=production
+
+# NASA
+NASA_API_KEY=your-nasa-key
+
+# Compatibility / general app metadata
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
+## VPS Setup
+
+### 1. SSH into the server
 
 ```bash
 ssh deploy@www.ollis-astro-club.com
 ```
 
-### 2. Navigate to the project directory
+### 2. Go to the project directory
 
 ```bash
 cd /var/www/ollis-astro-club
 ```
 
-### 3. Create and secure the environment file (first time only)
+### 3. Create the env file if needed
 
 ```bash
 touch .env.local
 chmod 600 .env.local
 ```
 
-### 4. Edit the environment file
+### 4. Populate the env file
 
-```bash
-nano .env.local
-```
-
-Paste and fill in all values:
-
-```bash
-# Auth0 (v4 SDK) — get these from https://manage.auth0.com
-# Generate AUTH0_SECRET with: openssl rand -hex 32
-AUTH0_SECRET=<generate-with-openssl-rand-hex-32>
-AUTH0_DOMAIN=your-tenant.eu.auth0.com
-AUTH0_CLIENT_ID=<your-client-id>
-AUTH0_CLIENT_SECRET=<your-client-secret>
-APP_BASE_URL=https://www.ollis-astro-club.com
-
-# Sanity — get these from https://www.sanity.io/manage
+```dotenv
+# Sanity
 NEXT_PUBLIC_SANITY_PROJECT_ID=<your-project-id>
 NEXT_PUBLIC_SANITY_DATASET=production
-SANITY_API_TOKEN=<your-read-token>
 
-# NASA — register at https://api.nasa.gov
+# Optional explicit API version
+# NEXT_PUBLIC_SANITY_API_VERSION=2025-03-01
+
+# NASA
 NASA_API_KEY=<your-nasa-api-key>
 
-# MySQL on Ionos VPS (add when database is introduced)
-# DATABASE_URL=mysql://user:password@localhost:3306/astro_club
-
-# App
+# Optional compatibility metadata
 NEXT_PUBLIC_SITE_URL=https://www.ollis-astro-club.com
+
+# Future auth / database values may stay present even if Nuxt does not use them yet
+AUTH0_SECRET=<future>
+AUTH0_DOMAIN=<future>
+AUTH0_CLIENT_ID=<future>
+AUTH0_CLIENT_SECRET=<future>
+APP_BASE_URL=https://www.ollis-astro-club.com
+DATABASE_URL=<future>
 ```
 
-Save and exit: `Ctrl+O`, `Enter`, `Ctrl+X`.
-
-### 5. Verify the file
+### 5. Manual rebuild / restart
 
 ```bash
-ls -la .env.local
-# Should show: -rw------- 1 deploy deploy ... .env.local
-
-# Verify content (no secrets printed to screen unintentionally):
-grep -c '=' .env.local   # prints number of lines with values
-```
-
-### 6. Rebuild and restart after setting env vars
-
-After creating or changing `.env.local` for the first time, rebuild and restart:
-
-```bash
+npm ci
 npm run build
 pm2 restart ollis-astro-club
-pm2 status  # verify it shows "online"
+pm2 status
 ```
 
-> **Subsequent deployments** (after `git pull` + `npm run build`) only need `pm2 restart ollis-astro-club` — the `.env.local` file persists on the server and does not need to be recreated.
+## GitHub Actions Deployment
 
-### 7. Verify environment variables are loaded
+Current workflow behavior:
+
+```yaml
+cd /var/www/ollis-astro-club
+pm2 stop ollis-astro-club 2>/dev/null || true
+git pull origin main
+npm ci
+npm run build
+pm2 delete ollis-astro-club 2>/dev/null || true
+pm2 start npm --name "ollis-astro-club" -- start
+pm2 save
+```
+
+This now deploys the root Nuxt app, not the legacy Next app.
+
+## Verification
+
+After deployment, verify:
 
 ```bash
-pm2 show ollis-astro-club      # shows process details
-# Or check that the site works:
-curl -I https://www.ollis-astro-club.com
+pm2 status
+curl -I https://www.ollis-astro-club.com/de
 ```
 
-## Security Best Practices
+Expected result: `HTTP/1.1 200 OK`.
 
-- **Never commit `.env.local`** — it is already in `.gitignore`
-- **Use `chmod 600`** on the env file so only the owner can read it
-- **Rotate secrets regularly** — especially `AUTH0_SECRET` and API tokens
-- **Use separate Auth0 applications** for development and production
-- **Generate `AUTH0_SECRET`** with: `openssl rand -hex 32`
-- **Use a dedicated database user** for the MySQL connection with minimal required permissions
-- **Back up env vars** securely (e.g., in a password manager), not in the repo
+## Notes
 
-## Obtaining API Keys
-
-### Auth0
-1. Go to https://manage.auth0.com
-2. Create a new application (Regular Web Application)
-3. Note the Domain, Client ID, and Client Secret
-4. Set Allowed Callback URLs: `https://www.ollis-astro-club.com/auth/callback`
-5. Set Allowed Logout URLs: `https://www.ollis-astro-club.com`
-6. Set Allowed Web Origins: `https://www.ollis-astro-club.com`
-
-### NASA API
-1. Go to https://api.nasa.gov
-2. Register for a free API key
-3. The default `DEMO_KEY` works for development (rate-limited)
-
-### Sanity.io
-1. Go to https://www.sanity.io/manage
-2. Create a new project
-3. Get the Project ID from project settings
-4. Create an API token with read access under Settings → API → Tokens
+- The old Next app in `ollis-astro-club-next-js/` is not part of production deployment anymore.
+- Storybook is also no longer part of the production build pipeline.
+- If Vue Storybook is added later, deploy it with a separate workflow or separate static publish step.

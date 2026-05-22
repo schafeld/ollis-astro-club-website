@@ -1,49 +1,52 @@
-# This Next.js web app is for the website www.ollis-astro-club.com – a fun and science website for all ages.
+# This Nuxt web app is for the website www.ollis-astro-club.com – a fun and science website for all ages.
 
 Audience:
 
-This web app is meant to be a website about astronomy, space and related subjects (e.g. games, arts and crafts, science fiction). It is to be suitable for audiences from 3rd grade onwards.
+This web app is a website about astronomy, space, and related subjects such as games, arts and crafts, and science fiction. It should be suitable for audiences from 3rd grade onward.
 
 Tech Stack:
 
-- Next.js with Typescript
-- Auth0
-- TailwindCSS
-- Zod
-- React Server Components
-- REST APIs (GraphQL if applicable)
-- i18n (German and English – selection should be persisted)
-- Ready to use Sanity.io as headless CMS
-- If required this project can make use of a Ionos MySQL server (project is hosted as Ionos VPS)
+- Nuxt 4 with TypeScript
+- Vue 3
+- Tailwind CSS
+- `@nuxtjs/i18n`
+- `@nuxtjs/color-mode`
+- Zod where useful
+- Sanity.io as headless CMS
+- Public APIs such as NASA APOD
+- Optional future use of an Ionos MySQL server if needed later
 
 Design:
 
-- The logo public/logo-astro-club-300x300.png must be used.
-- The design is inspired by handwriting/sketches – see the detailled prompt at DESIGN.md
-- Fully responsive design must be usable on slow mobile connections too
-- dark/light mode (selection should be persisted)
+- The logo `public/logo-astro-club-300x300.png` must be used.
+- The design is inspired by handwriting and sketches; see `DESIGN.md`.
+- The site must remain fully responsive and usable on slow mobile connections.
+- Dark and light mode should be supported.
 
 Architecture:
 
-- The project should be able to integrate closed source components
-- The project shold be able to integrate other frameworks
-Probably a microfrontend architecture and/or monorepo should be feasible
-- A basic dashboard should be provided for registered users who will be able to bookmark pages, save highscores, upload user images etc. (to be defined/extended later)
+- The root application is Nuxt, not Next.js.
+- Locale-prefixed routes such as `/de/news` and `/en/news` should be preserved.
+- The project should remain flexible enough to integrate future closed-source components or external frameworks if needed.
+- A basic dashboard exists as a placeholder for future registered-user features such as bookmarks, highscores, and uploads.
 
 Content:
 
-- Take the already available content from `app/page.tsx` and the wheel of fortune feature from `app/zufallszahlen/page.tsx` and integrate them as separate menu items/ routes.
-- The content should be structured in Astro Club News (a blog), information (astronomy information, link lists, maybe live information through public APIs from NASA or ESA), games (simple retro style javascript games like asteroids, moon buggy, or moon lander; mobile friendly), fun stuff (images and videos of cardboard UFOs, robots, aliens, astronauts etc.)
+- Structure the content into Astro Club News, information, games, and fun.
+- Keep Sanity-backed content for homepage/news/links/impressum working.
+- Keep the NASA APOD page working.
+- Preserve the wheel of fortune routes and the legacy `/zufallszahlen` route.
 
-**AI Task:**
-Create planning documents to outline this website's concept in the folder `/AI_DOCS` (create a separate `CLAUDE.md` in the root folder if that is a best practice for Claude Code agentic development). Create documents that will serve as context for future development with generative/agentic AI and as documentation for users and developers.
+AI Task:
+
+Maintain the planning documents in `/AI_DOCS` as living documentation for the current Nuxt version of the website. Keep them aligned with the actual deployed root app, not with the legacy Next.js reference app in `ollis-astro-club-next-js/`.
 
 ---
 
-## Clarifications (March 2026)
+## Clarifications (May 2026)
 
-1. **Framework:** The project uses **Next.js** (keep project at latest long term stable version as dependencies allow)
-2. **Auth0:** Integrate from the start of development. Begin with a single hardcoded admin dummy user for testing before full Auth0 setup.
-3. **Sanity.io:** Fresh start — no existing Sanity project. Will be set up from scratch.
-4. **MySQL (Ionos):** Fresh start — no existing database or schema. Will be created as needed.
-5. **Closed-source components:** General architecture requirement for the future. No specific proprietary components planned at this time. The architecture should simply be extensible enough to allow it later.
+1. **Framework:** The active website now uses **Nuxt 4** at the repository root.
+2. **Legacy app:** The previous Next.js implementation has been moved to `ollis-astro-club-next-js/` and should be treated as reference code only.
+3. **Sanity.io:** CMS integration is active in the Nuxt root app, but the schema source of truth still lives in the legacy Next subfolder.
+4. **Deployment:** The production server now deploys the root Nuxt app and runs it via Nitro under PM2.
+5. **Auth0:** Still planned, not fully wired in the active Nuxt app yet.

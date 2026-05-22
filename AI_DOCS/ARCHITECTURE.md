@@ -2,174 +2,141 @@
 
 ## Overview
 
-Olli's Astro Club is a Next.js 16 application using the App Router with React Server Components. The architecture prioritizes performance on slow mobile connections, i18n support, and extensibility for microfrontend integration.
+Olli's Astro Club now runs as a Nuxt 4 application at the repository root. The architecture uses Vue 3, TypeScript, server-rendered content pages, manual locale-prefixed routes, and a small Sanity integration layer for CMS-backed content.
 
-## Application Architecture
+The old Next.js implementation is still present in `ollis-astro-club-next-js/` as a behavioral reference and as the current schema source of truth for Sanity Studio sync.
 
-```
-┌─────────────────────────────────────────────────────┐
-│                    Next.js App Router               │
-│  ┌───────────┐  ┌───────────┐  ┌────────────────┐   │
-│  │   Pages   │  │  Layouts  │  │  Middleware    │   │
-│  │  (RSC)    │  │  (RSC)    │  │  (i18n, auth)  │   │
-│  └─────┬─────┘  └─────┬─────┘  └────────────────┘   │
-│        │              │                             │
-│  ┌─────▼──────────────▼─────┐                       │
-│  │   Shared Components      │                       │
-│  │  (UI kit, layout prims)  │                       │
-│  └─────┬────────────┬───────┘                       │
-│        │            │                               │
-│  ┌─────▼─────┐ ┌────▼──────┐                        │
-│  │  Sanity   │ │  External │                        │
-│  │  CMS      │ │  APIs     │                        │
-│  │  (GROQ)   │ │  (NASA,   │                        │
-│  └───────────┘ │   ESA)    │                        │
-│                └───────────┘                        │
-└─────────────────────────────────────────────────────┘
-```
+## Current Application Shape
 
-## Directory Structure (Target)
+```text
+Repo Root (Nuxt 4 app)
+├── app/
+│   ├── app.vue
+│   ├── layouts/default.vue
+│   ├── components/
+│   │   ├── AppHeader.vue
+│   │   ├── AppFooter.vue
+│   │   ├── FortuneWheel.vue
+│   │   └── sanity/PortableTextRenderer.vue
+│   └── pages/
+│       ├── [locale]/...
+│       └── zufallszahlen.vue
+├── i18n/i18n.config.ts
+├── lib/
+│   ├── nasa/apod.ts
+│   └── sanity/{client,env,image,queries}.ts
+├── messages/{de,en}.json
+├── public/
+└── nuxt.config.ts
 
-```
-app/
-  [locale]/                  # i18n: /de/... and /en/...
-    layout.tsx               # Locale-aware root layout
-    page.tsx                 # Homepage
-    news/                    # Ollis Astro Club News (blog)
-      page.tsx               # Blog listing
-      [slug]/page.tsx        # Individual blog post
-    info/                    # Information section
-      page.tsx               # Astronomy info hub
-      links/page.tsx         # Curated link lists
-      live/page.tsx          # Live data (NASA/ESA APIs)
-    games/                   # Games section
-      page.tsx               # Games hub
-      asteroids/page.tsx     # Asteroids game
-      moon-buggy/page.tsx    # Moon Buggy game
-      moon-lander/page.tsx   # Moon Lander game
-      gluecksrad/page.tsx    # Wheel of Fortune (migrated)
-    fun/                     # Fun stuff section
-      page.tsx               # Fun hub
-      gallery/page.tsx       # Images of cardboard crafts
-      videos/page.tsx        # Videos
-    dashboard/               # Authenticated user area
-      page.tsx               # User dashboard
-      bookmarks/page.tsx
-      highscores/page.tsx
-  api/                       # API routes
-    auth/[...auth0]/route.ts # Auth0 callback routes
-components/
-  ui/                        # Reusable UI components (design system)
-    Button.tsx
-    Card.tsx
-    Navigation.tsx
-    ThemeToggle.tsx
-    LanguageSwitcher.tsx
-  layout/                    # Layout components
-    Header.tsx
-    Footer.tsx
-    Sidebar.tsx
-  games/                     # Game-specific components
-  content/                   # Content display components
-lib/
-  sanity/                    # Sanity client, queries, types
-  auth/                      # Auth0 configuration
-  i18n/                      # Internationalization utilities
-  api/                       # External API clients (NASA, ESA)
-  db/                        # Database access (if MySQL needed)
-messages/                    # i18n translation files
-  de.json
-  en.json
-public/
-  fonts/                     # Kalam, Patrick Hand (self-hosted)
-  images/
+Legacy reference app
+└── ollis-astro-club-next-js/
 ```
 
-## Key Architectural Decisions
+## Route Architecture
 
-### 1. React Server Components First
+Locale-prefixed URLs are implemented explicitly in the file system:
 
-All pages and layouts are RSC by default. Client components (`'use client'`) only for:
-- Interactive games
-- Theme/language toggle
-- Animated components (e.g., wheel of fortune)
-- Dashboard features requiring client state
+```text
+app/pages/[locale]/
+  index.vue
+  news/
+    index.vue
+    [slug].vue
+  info/
+    index.vue
+    links.vue
+    live.vue
+  games/
+    index.vue
+    asteroids.vue
+    moon-buggy.vue
+    moon-lander.vue
+    gluecksrad.vue
+  fun/
+    index.vue
+    gallery.vue
+    videos.vue
+    gluecksrad.vue
+  impressum.vue
+  dashboard.vue
 
-### 2. i18n Strategy
+app/pages/
+  zufallszahlen.vue
+```
 
-Use `next-intl` with the `[locale]` route segment approach:
-- German (`/de/...`) is the default locale
-- English (`/en/...`) is the secondary locale
-- Locale preference stored in a cookie
-- Middleware handles locale detection and redirects
-- Translation files in `messages/de.json` and `messages/en.json`
+`@nuxtjs/i18n` is used for translations only. It stays in `no_prefix` mode so it does not generate its own locale routing on top of the manual `[locale]` tree.
 
-### 3. CMS Integration (Sanity.io)
+## Rendering Strategy
 
-- Blog posts, info articles, and curated link lists are managed in Sanity
-- Use GROQ queries with the Sanity client in RSC (no client-side fetching for content)
-- Static generation with ISR (Incremental Static Regeneration) for content pages
-- Schema types: BlogPost, InfoArticle, LinkList, GameMeta
+- Content pages use `useAsyncData()` and server-side fetches.
+- Sanity-backed pages fetch through the local `lib/sanity/*` helpers.
+- Rich text is rendered through `app/components/sanity/PortableTextRenderer.vue`.
+- Highly interactive UI, such as the wheel, stays in dedicated Vue components.
 
-### 4. Authentication (Auth0) — From Day One
+## Shared Shell
 
-Auth0 is integrated from the start of development, not deferred.
+- `app/app.vue` provides the Nuxt shell.
+- `app/layouts/default.vue` wraps all main pages.
+- `app/components/AppHeader.vue` owns navigation, locale switching, and theme toggle.
+- `app/components/AppFooter.vue` provides the shared footer.
 
-- Auth0 SDK for Next.js (`@auth0/nextjs-auth0`)
-- **Initial setup:** hardcoded admin dummy user for development/testing before full Auth0 tenant configuration
-- Protected routes: `/[locale]/dashboard/**`
-- Public routes: everything else
-- Roles: `admin` (content management, initially the hardcoded dummy) and `user` (registered members)
-- User data stored in Auth0 + MySQL (fresh database on Ionos VPS) for app-specific data (bookmarks, highscores)
+The design system is driven by `app/globals.css` plus the imported Google font definitions in `app/assets/fonts.css`.
 
-### 5. Theming (Dark/Light Mode)
+## Content Sources
 
-- CSS custom properties for theme tokens
-- `next-themes` or custom implementation with cookie persistence
-- The hand-drawn design system (DESIGN.md) currently defines light mode only
-- Dark mode needs adapted color palette (dark paper, light pencil strokes)
+### Local translations
 
-### 6. Microfrontend Readiness
+- `messages/de.json`
+- `messages/en.json`
 
-General architecture requirement for the future — no specific closed-source components are planned at this time. The architecture should be extensible enough to integrate them later.
+These provide UI copy and fallback content.
 
-To allow future integration of other frameworks or closed-source components:
-- Use Next.js Module Federation or iframe-based embedding as needed
-- Component boundaries are well-defined with clear data contracts
-- Shared state via URL params or a lightweight event bus (not a global store)
-- Games could be standalone bundles loaded dynamically
+### Sanity CMS
 
-### 7. Performance Strategy
+The live app queries Sanity via:
 
-- Self-host fonts (Patrick Hand) to avoid external CDN dependency
-- Use `next/image` for all images with appropriate sizing
-- Lazy-load games and heavy interactive content
-- Minimal client-side JavaScript for content pages
-- Consider service worker for offline access to static content
+- `lib/sanity/env.ts`
+- `lib/sanity/client.ts`
+- `lib/sanity/queries.ts`
+- `lib/sanity/image.ts`
 
-### 8. Database (Optional MySQL on Ionos)
+Current CMS-backed surfaces:
 
-Only used if Auth0 user metadata is insufficient for:
-- Storing user bookmarks
-- Game highscores (leaderboard)
-- Uploaded user images
-- Access via a data access layer in `lib/db/`, not directly from components
+- homepage
+- news list
+- news detail
+- info links
+- impressum
 
-## External API Integrations
+### External APIs
 
-| API | Purpose | Caching Strategy |
-|-----|---------|-----------------|
-| Sanity.io | Blog posts, articles, links | ISR (revalidate ~60s) |
-| NASA APOD | Astronomy Picture of the Day | ISR (revalidate ~3600s) |
-| ESA feeds | Space news | ISR (revalidate ~3600s) |
-| Auth0 | Authentication | Session-based |
+- NASA APOD via `lib/nasa/apod.ts`
 
-## Security Considerations
+If `NASA_API_KEY` is missing, the APOD helper falls back to NASA's `DEMO_KEY` for development.
 
-- All external links use `rel="noreferrer"` (already in existing code)
-- Auth0 handles authentication; no custom auth logic
-- API keys stored in environment variables, never committed
-- Sanity content is read-only from the frontend
-- User uploads validated and sanitized server-side
-- CSRF protection via Auth0 session handling
-- Content Security Policy headers for game content
+## Environment Loading
+
+The root `nuxt.config.ts` loads `.env.local` and `.env` from the repository root before building `runtimeConfig`. This is required because public Sanity configuration and NASA configuration are injected into the build.
+
+Supported public Sanity env names:
+
+- `NUXT_PUBLIC_SANITY_PROJECT_ID` or `NEXT_PUBLIC_SANITY_PROJECT_ID`
+- `NUXT_PUBLIC_SANITY_DATASET` or `NEXT_PUBLIC_SANITY_DATASET`
+- `NUXT_PUBLIC_SANITY_API_VERSION` or `NEXT_PUBLIC_SANITY_API_VERSION`
+
+## Legacy Next.js Subfolder
+
+The directory `ollis-astro-club-next-js/` is no longer the deployed site. It remains useful for:
+
+- comparing unfinished Vue routes with their old React behavior
+- preserving Storybook and old React tests until a Vue replacement exists
+- keeping the Sanity schema source of truth under `ollis-astro-club-next-js/lib/sanity/schemas/`
+
+## Current Gaps
+
+- Auth0 is not wired in the Nuxt root app yet.
+- Dashboard is a placeholder page only.
+- Storybook has not been migrated to Vue.
+- Vue unit/component tests are not set up yet.
+- A shared locale validation helper could reduce repeated page-level checks.

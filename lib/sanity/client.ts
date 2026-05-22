@@ -18,7 +18,7 @@ export async function sanityFetch<T>({
     projectId,
     dataset,
     apiVersion,
-    useCdn: true,
+    useCdn: false,
   });
 
   return client.fetch<T>(query, params);

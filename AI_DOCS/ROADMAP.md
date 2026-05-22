@@ -1,138 +1,57 @@
 # Implementation Roadmap
 
-## Phase 0 — Foundation (Current → Start)
+## Current State
 
-**Goal:** Set up the project infrastructure before building features.
+The Nuxt migration is already the active website at the repository root.
 
-- [x] Fix TASK.md: correct "Nuxt.js" → "Next.js", "AuthO" → "Auth0"
-- [ ] Set up Prettier and consistent formatting
-- [ ] Self-host fonts (Kalam, Patrick Hand) via `next/font/google`
-- [ ] Implement Tailwind design tokens from `DESIGN.md` (colors, shadows, fonts)
-- [ ] Build core UI components following the hand-drawn design system:
-  - Button, Card, Input, Badge
-  - Header/Navigation (responsive, mobile hamburger menu)
-  - Footer
-  - ThemeToggle (dark/light)
-- [ ] Set up `next-intl` with `[locale]` routing, middleware, and base translation files
-- [ ] Set up `next-themes` for dark/light mode with cookie persistence
-- [ ] Create shared layout (`app/[locale]/layout.tsx`) with nav + footer
-- [ ] Add paper texture background and global design tokens to `globals.css`
-- [ ] Set up Auth0 integration (`@auth0/nextjs-auth0`)
-  - Configure Auth0 application (or use a hardcoded admin dummy for initial development)
-  - Implement login/logout/callback API routes
-  - Add auth middleware for protected routes
-  - Create a temporary hardcoded admin user for development/testing
-- [ ] Set up basic Auth0-protected admin area
+Already migrated and working:
 
-**Deliverable:** Empty shell with navigation, i18n, theming, auth, and design system ready.
+- homepage
+- news list
+- news detail
+- info landing page
+- info links
+- info live with NASA APOD
+- impressum
+- games landing page and game subroutes
+- fun landing page and interactive wheel
+- legacy `/zufallszahlen` route
+- root deploy flow to Nuxt via PM2
 
-## Phase 1 — Content Migration
+## Remaining Work
 
-**Goal:** Migrate existing content into the new structure.
+### Phase 1 — Finish Nuxt Parity Tail
 
-- [ ] Migrate homepage content from `app/page.tsx` into new section pages
-- [ ] Create `/info/links` page with categorized link cards (hardcoded initially)
-- [ ] Migrate Glücksrad to `/games/gluecksrad` with new design system
-- [ ] Build homepage with hero, section teasers, and APOD widget placeholder
-- [ ] Create placeholder pages for all main sections (News, Info, Games, Fun)
-- [ ] Implement responsive navigation with all routes
+- [ ] Wire real Auth0 integration in the Nuxt app
+- [ ] Replace the dashboard placeholder with actual authenticated flows
+- [ ] Review placeholder game/fun subpages and decide which need full implementations vs. intentional stubs
+- [ ] Add a shared locale guard/helper to reduce repeated page-level validation
 
-**Deliverable:** All existing content accessible in the new structure.
+### Phase 2 — Sanity Ownership Cleanup
 
-## Phase 2 — CMS Integration (Sanity)
+- [ ] Move Sanity schema source of truth out of the legacy Next subfolder
+- [ ] Decide whether schemas should live in the Nuxt root or in a dedicated shared package
+- [ ] Add webhook-based invalidation or another faster content refresh strategy if needed
 
-**Goal:** Move content management to Sanity.io (fresh project, set up from scratch).
+### Phase 3 — Vue Tooling
 
-- [ ] Create new Sanity.io project and configure studio
-- [ ] Define schemas: BlogPost, LinkItem, GalleryImage, VideoEmbed
-- [ ] Migrate link data from hardcoded pages into Sanity
-- [ ] Implement GROQ queries in RSC for link listing
-- [ ] Build blog listing page (`/news`) and post detail page (`/news/[slug]`)
-- [ ] Configure ISR for content pages
-- [ ] Add translation fields to Sanity schemas
+- [ ] Add Vue unit/component testing to the root app
+- [ ] Decide whether to migrate Storybook to Vue or drop it entirely
+- [ ] Add CI validation beyond `npm run build`
 
-**Deliverable:** Blog and links managed via Sanity CMS.
+### Phase 4 — User Features
 
-## Phase 3 — Live Data & APIs
+- [ ] Implement authentication-backed dashboard pages
+- [ ] Add bookmarks and highscores storage
+- [ ] Decide whether MySQL is needed or whether auth metadata is enough initially
 
-**Goal:** Integrate external space APIs.
+### Phase 5 — Polish
 
-- [ ] Register for NASA API key
-- [ ] Implement NASA APOD widget on homepage
-- [ ] Build `/info/live` page with:
-  - ISS Tracker (map-based or text)
-  - Upcoming rocket launches
-  - Near-Earth Objects (closest approach table)
-- [ ] Server-side fetching with ISR caching
-- [ ] Error handling and fallback UI for API failures
+- [ ] Accessibility review
+- [ ] SEO review for the Nuxt root app
+- [ ] Error page polish
+- [ ] Performance review on slower mobile connections
 
-**Deliverable:** Live space data available on the info section.
+## Legacy Subfolder
 
-## Phase 4 — Games
-
-**Goal:** Build retro-style browser games.
-
-- [ ] Create game framework (shared canvas/game loop, touch controls, score tracking)
-- [ ] Implement Asteroids game
-- [ ] Implement Moon Buggy game
-- [ ] Implement Moon Lander game
-- [ ] Add game instructions (i18n) and mobile touch controls
-- [ ] Local highscore storage (localStorage, migrate to server when auth is ready)
-
-**Deliverable:** Three playable games + migrated Glücksrad.
-
-## Phase 5 — Dashboard & User Features
-
-**Goal:** Build out user-facing dashboard features (Auth0 already set up in Phase 0).
-
-- [ ] Build dashboard layout and pages:
-  - Bookmarks
-  - Highscores (personal + leaderboard)
-  - User profile / settings
-- [ ] Persist game highscores to server for logged-in users
-- [ ] Implement bookmarking feature (save any page)
-- [ ] Replace hardcoded admin dummy with full Auth0 user management
-- [ ] Set up MySQL on Ionos VPS for user data storage (fresh database)
-  - Schema for bookmarks, highscores, user uploads
-  - Data access layer via Drizzle ORM or Prisma
-
-**Deliverable:** Registered users can log in, save bookmarks, and track scores.
-
-## Phase 6 — Fun Stuff & Gallery
-
-**Goal:** Build the creative/community content sections.
-
-- [ ] Build gallery page with image grid and lightbox
-- [ ] Build video page with lazy-loaded embeds
-- [ ] Add admin image uploads via Sanity
-- [ ] Optional: user image uploads (if dashboard is ready)
-- [ ] Moderation workflow for user-uploaded content
-
-**Deliverable:** Gallery and video sections operational.
-
-## Phase 7 — Polish & Launch
-
-**Goal:** Production readiness.
-
-- [ ] Performance audit (Lighthouse, Web Vitals)
-- [ ] Accessibility audit (WCAG 2.1 AA)
-- [ ] SEO: meta tags, OpenGraph, structured data
-- [ ] Error pages (404, 500) in design system
-- [ ] Cookie consent (GDPR compliance)
-- [ ] Security headers (CSP, HSTS)
-- [ ] Set up deployment pipeline on Ionos VPS
-- [ ] Domain configuration (www.ollis-astro-club.com)
-- [ ] Monitoring and error tracking
-
-**Deliverable:** Production-ready website.
-
-## Future Ideas (Backlog)
-
-- [ ] Microfrontend integration for closed-source components
-- [ ] Push notifications for astronomical events
-- [ ] PWA / offline mode for content pages
-- [ ] Student account management (class groups)
-- [ ] Telescope booking system for the club's telescope
-- [ ] AI-generated astronomy quizzes
-- [ ] Virtual planetarium (WebGL/Three.js)
-- [ ] Night mode (red-filtered display for use while stargazing)
+The old Next app in `ollis-astro-club-next-js/` is not part of the launch roadmap anymore. It is a reference asset and migration fallback only.

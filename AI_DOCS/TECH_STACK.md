@@ -1,148 +1,119 @@
-# Tech Stack — Detailed Decisions
+# Tech Stack — Current Nuxt Root App
 
 ## Core Framework
 
 | Technology | Version | Purpose |
 |---|---|---|
-| **Next.js** | 16.x | App Router, RSC, SSR/SSG, API routes |
-| **React** | 19.x | UI components, Server Components |
+| **Nuxt** | 4.4.x | SSR app framework, routing, build, Nitro server |
+| **Vue** | 3.5.x | UI layer and components |
 | **TypeScript** | 5.x | Type safety |
-
-> **Note:** The TASK.md originally mentions "Nuxt.js" but the project is built with **Next.js**. This document reflects the actual stack.
+| **Nitro** | 2.13.x | Production server runtime |
 
 ## Styling
 
 | Technology | Version | Purpose |
 |---|---|---|
-| **Tailwind CSS** | 4.x | Utility-first CSS framework |
-| **Google Fonts** (self-hosted) | — | Kalam + Patrick Hand (hand-drawn design) |
+| **Tailwind CSS** | 4.3.x | Utility styling |
+| **@tailwindcss/vite** | 4.3.x | Tailwind integration in Nuxt/Vite |
+| **Google Fonts import** | — | `Kalam` and `Patrick Hand` via `app/assets/fonts.css` |
 
-### Tailwind Configuration
-
-Custom design tokens to add (aligned with `DESIGN.md`):
-- Colors: `paper`, `pencil`, `muted`, `accent`, `accent-blue`
-- Border-radius: `wobbly`, `wobbly-md` (via custom plugin or inline styles)
-- Shadows: `sketch`, `sketch-lg` (hard offset, no blur)
-- Fonts: `heading` (Kalam), `body` (Patrick Hand)
-
-## Authentication
-
-| Technology | Purpose |
-|---|---|
-| **Auth0** (`@auth0/nextjs-auth0`) | User authentication, session management |
-
-- Social logins + email/password
-- Role-based access: `user` (default), `admin` (content management)
-- Session stored in encrypted cookies
-- Protected API routes and dashboard pages
-
-## CMS
-
-| Technology | Purpose |
-|---|---|
-| **Sanity.io** (`next-sanity`, `@sanity/image-url`) | Headless CMS for blog, links, gallery |
-
-- Sanity Studio deployed separately (or embedded at `/studio` route)
-- Content types: BlogPost, LinkItem, GalleryImage, VideoEmbed, GameMeta
-- Localized fields for German + English
-- GROQ queries in RSC (server-side only)
-- Image CDN via Sanity's image pipeline
+The visual system still comes primarily from `app/globals.css` and the hand-drawn styles defined there.
 
 ## Internationalization
 
 | Technology | Purpose |
 |---|---|
-| **next-intl** | i18n routing, message formatting, locale detection |
+| **@nuxtjs/i18n** | Translation integration |
+| **vue-i18n** | Message formatting/runtime |
 
-- Route-based: `/de/...` and `/en/...`
-- Middleware for locale detection (Accept-Language header → cookie → default)
-- Message files: `messages/de.json`, `messages/en.json`
-- Sanity content: localized fields with German as primary
+Current approach:
 
-## Validation
+- explicit route tree under `app/pages/[locale]/**`
+- Nuxt i18n in `no_prefix` mode
+- translation files at `messages/de.json` and `messages/en.json`
 
-| Technology | Purpose |
-|---|---|
-| **Zod** | Schema validation for forms, API inputs, env vars |
-
-- Form validation (contact forms, user settings)
-- API request/response validation
-- Environment variable validation at build time
-- Sanity response type narrowing
-
-## Database (Optional)
+## CMS / Content
 
 | Technology | Purpose |
 |---|---|
-| **MySQL** (Ionos VPS) | User data beyond Auth0 profile |
+| **@sanity/client** | GROQ content fetches |
+| **@sanity/image-url** | Sanity image URLs |
+| **@portabletext/vue** | Portable Text rendering |
 
-- Only introduced when needed (bookmarks, highscores, uploads)
-- Access via Drizzle ORM or Prisma (TBD)
-- Migrations managed via ORM tooling
-- Connection pooling for serverless compatibility
+Nuxt uses a local Sanity layer:
+
+- `lib/sanity/env.ts`
+- `lib/sanity/client.ts`
+- `lib/sanity/queries.ts`
+- `lib/sanity/image.ts`
+
+## Theme Handling
+
+| Technology | Purpose |
+|---|---|
+| **@nuxtjs/color-mode** | Light/dark mode selection |
 
 ## External APIs
 
-| API | URL | Purpose | Auth |
-|---|---|---|---|
-| NASA APOD | `api.nasa.gov/planetary/apod` | Astronomy Picture of the Day | API key (free) |
-| NASA NeoWs | `api.nasa.gov/neo/rest/v1/feed` | Near-Earth Objects | API key (free) |
-| Open Notify | `api.open-notify.org/iss-now.json` | ISS position | None |
-| Launch Library 2 | `ll.thespacedevs.com/2.2.0/launch/upcoming` | Upcoming launches | None (rate-limited) |
-| ESA RSS | `esa.int/rssfeed/*` | ESA news | None |
-
-## Development Tools
-
-| Tool | Purpose |
+| API | Purpose |
 |---|---|
-| **ESLint** (9.x + `eslint-config-next`) | Linting |
-| **Prettier** (to add) | Code formatting |
-| **PostCSS** | Tailwind CSS processing |
+| NASA APOD | Astronomy Picture of the Day for `/[locale]/info/live` |
 
-## Dependencies to Add (Planned)
+## Validation / Utilities
 
-```
-# Core
-npm install next-intl next-themes zod
+| Technology | Purpose |
+|---|---|
+| **zod** | Validation utilities where needed |
 
-# Auth
-npm install @auth0/nextjs-auth0
-
-# CMS
-npm install next-sanity @sanity/image-url
-
-# Fonts (self-hosted via next/font)
-# Kalam and Patrick Hand loaded via next/font/google
-
-# Database (when needed)
-npm install drizzle-orm mysql2
-npm install -D drizzle-kit
-
-# Development
-npm install -D prettier eslint-config-prettier
-```
-
-## Environment Variables (Required)
+## Root App Scripts
 
 ```bash
-# Auth0
-AUTH0_SECRET=
-AUTH0_BASE_URL=
-AUTH0_ISSUER_BASE_URL=
-AUTH0_CLIENT_ID=
-AUTH0_CLIENT_SECRET=
+npm run dev
+npm run build
+npm run preview
+npm run start
+```
 
+`npm run start` runs the built Nitro server using `node .output/server/index.mjs`.
+
+## Repository Layout
+
+```text
+repo root/                  # deployed Nuxt app
+ollis-astro-club-next-js/  # legacy Next.js reference app
+```
+
+The legacy Next app still contains:
+
+- previous React implementation details
+- old Storybook setup
+- Sanity schema source under `ollis-astro-club-next-js/lib/sanity/schemas/`
+
+## Environment Variables in Active Use
+
+```dotenv
 # Sanity
+NUXT_PUBLIC_SANITY_PROJECT_ID=
+NUXT_PUBLIC_SANITY_DATASET=
+NUXT_PUBLIC_SANITY_API_VERSION=
+
+# Compatibility aliases also supported
 NEXT_PUBLIC_SANITY_PROJECT_ID=
 NEXT_PUBLIC_SANITY_DATASET=
-SANITY_API_TOKEN=
+NEXT_PUBLIC_SANITY_API_VERSION=
 
 # NASA
 NASA_API_KEY=
 
-# Database (optional)
-DATABASE_URL=
-
-# App
+# Optional site metadata / compatibility
 NEXT_PUBLIC_SITE_URL=https://www.ollis-astro-club.com
 ```
+
+## Not Yet Migrated to Nuxt Root
+
+- Auth0 integration
+- Vue Storybook
+- Vue unit/component test suite
+- Database-backed user features
+
+Those still exist only as requirements or as legacy implementation context, not as active root-app capabilities.
