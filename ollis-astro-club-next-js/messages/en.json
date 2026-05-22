@@ -1,0 +1,75 @@
+{
+  "nav": {
+    "home": "Home",
+    "news": "News",
+    "info": "Info",
+    "games": "Games",
+    "fun": "Fun",
+    "dashboard": "My Area",
+    "login": "Log in",
+    "logout": "Log out"
+  },
+  "home": {
+    "title": "Olli's Astro Club",
+    "subtitle": "Tips for Stargazers",
+    "welcome": "Welcome to the Astro Club!",
+    "description": "Astronomy Club at Michaelschule in Groß Reken – stars, planets, games and more!"
+  },
+  "info": {
+    "title": "Astronomy Info",
+    "links": "Links & Tips",
+    "live": "Live Data",
+    "apod": {
+      "title": "NASA Picture of the Day",
+      "date": "Date",
+      "copyright": "Copyright",
+      "error": "Error loading NASA image",
+      "videoNote": "Today's feature is a video!",
+      "externalVideo": "Video cannot be directly embedded",
+      "viewOnNasa": "View video on NASA →",
+      "sourceLink": "View on NASA"
+    }
+  },
+  "games": {
+    "title": "Games",
+    "asteroids": { "title": "Asteroids" },
+    "moonBuggy": { "title": "Moon Buggy" },
+    "moonLander": { "title": "Moon Lander" },
+    "wheelOfFortune": { "title": "Wheel of Fortune" }
+  },
+  "fun": {
+    "title": "Fun",
+    "gallery": "Gallery",
+    "videos": "Videos",
+    "wheelOfFortune": {
+      "title": "Wheel of Fortune",
+      "spin": "Spin!",
+      "maxSectors": "Number of sectors (2–20)"
+    }
+  },
+  "dashboard": {
+    "title": "My Area",
+    "bookmarks": "Bookmarks",
+    "highscores": "Highscores",
+    "images": "My Images"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred.",
+    "backHome": "Back to Home",
+    "language": "Language",
+    "theme": "Theme",
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode"
+  },
+  "footer": {
+    "copyright": "© {year} Ollis Astro Club – Astronomy Club at Michaelschule in Groß Reken",
+    "madeBy": "by Oliver Schafeld",
+    "openSource": "Open Source",
+    "impressum": "Legal Notice"
+  },
+  "impressum": {
+    "title": "Legal Notice (Impressum)",
+    "fallback": "This page is managed by Oliver Schafeld. For more information visit www.schafeld.com."
+  }
+}

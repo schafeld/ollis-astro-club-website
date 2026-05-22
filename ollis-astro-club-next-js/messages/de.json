@@ -1,0 +1,75 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "news": "News",
+    "info": "Infos",
+    "games": "Spiele",
+    "fun": "Fun",
+    "dashboard": "Mein Bereich",
+    "login": "Anmelden",
+    "logout": "Abmelden"
+  },
+  "home": {
+    "title": "Ollis Astro Club",
+    "subtitle": "Tipps für Sternenfreunde",
+    "welcome": "Willkommen beim Astro Club!",
+    "description": "Astronomie AG an der Michaelschule in Groß Reken – Sterne, Planeten, Spiele und mehr!"
+  },
+  "info": {
+    "title": "Astronomie-Infos",
+    "links": "Links & Tipps",
+    "live": "Live-Daten",
+    "apod": {
+      "title": "NASA Bild des Tages",
+      "date": "Datum",
+      "copyright": "Copyright",
+      "error": "Fehler beim Laden des NASA-Bildes",
+      "videoNote": "Heute gibt es ein Video!",
+      "externalVideo": "Video kann nicht direkt eingebettet werden",
+      "viewOnNasa": "Video auf NASA ansehen →",
+      "sourceLink": "Auf NASA ansehen"
+    }
+  },
+  "games": {
+    "title": "Spiele",
+    "asteroids": { "title": "Asteroids" },
+    "moonBuggy": { "title": "Moon Buggy" },
+    "moonLander": { "title": "Moon Lander" },
+    "wheelOfFortune": { "title": "Glücksrad" }
+  },
+  "fun": {
+    "title": "Fun",
+    "gallery": "Galerie",
+    "videos": "Videos",
+    "wheelOfFortune": {
+      "title": "Glücksrad",
+      "spin": "Drehen!",
+      "maxSectors": "Anzahl der Felder (2–20)"
+    }
+  },
+  "dashboard": {
+    "title": "Mein Bereich",
+    "bookmarks": "Lesezeichen",
+    "highscores": "Highscores",
+    "images": "Meine Bilder"
+  },
+  "common": {
+    "loading": "Laden...",
+    "error": "Ein Fehler ist aufgetreten.",
+    "backHome": "Zurück zur Startseite",
+    "language": "Sprache",
+    "theme": "Design",
+    "darkMode": "Dunkelmodus",
+    "lightMode": "Hellmodus"
+  },
+  "footer": {
+    "copyright": "© {year} Ollis Astro Club – Astronomie AG an der Michaelschule in Groß Reken",
+    "madeBy": "von Oliver Schafeld",
+    "openSource": "Open Source",
+    "impressum": "Impressum"
+  },
+  "impressum": {
+    "title": "Impressum",
+    "fallback": "Diese Seite wird verwaltet von Oliver Schafeld. Weitere Informationen unter www.schafeld.com."
+  }
+}

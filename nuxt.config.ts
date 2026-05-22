@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import tailwindcss from '@tailwindcss/vite';
 
 function loadParentEnvFile(fileName: string) {
-  const envPath = resolve(process.cwd(), '..', fileName);
+  const envPath = resolve(process.cwd(), fileName);
 
   if (!existsSync(envPath)) {
     return;
@@ -42,7 +42,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   modules: ['@nuxtjs/i18n', '@nuxtjs/color-mode'],
-  css: ['./app/assets/fonts.css', '../app/globals.css'],
+  css: ['./app/assets/fonts.css', './app/globals.css'],
   vite: {
     plugins: [tailwindcss()],
   },

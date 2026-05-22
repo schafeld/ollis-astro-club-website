@@ -1,44 +1,25 @@
-import { createClient, type QueryParams } from 'next-sanity';
-import { apiVersion, dataset, projectId, isSanityConfigured } from './env';
+import { createClient, type QueryParams } from '@sanity/client';
+import { useSanityEnv } from './env';
 
-function getClient() {
+export async function sanityFetch<T>({
+  query,
+  params = {},
+}: {
+  query: string;
+  params?: QueryParams;
+}) {
+  const { apiVersion, dataset, isSanityConfigured, projectId } = useSanityEnv();
+
   if (!isSanityConfigured) {
-    throw new Error('Sanity is not configured. Set NEXT_PUBLIC_SANITY_PROJECT_ID.');
+    return null;
   }
-  return createClient({
+
+  const client = createClient({
     projectId,
     dataset,
     apiVersion,
     useCdn: true,
   });
-}
 
-/**
- * Helper for fetching from Sanity with built-in caching via Next.js.
- * Uses time-based revalidation (default: 60s).
- * Returns null if Sanity is not configured.
- */
-export async function sanityFetch<const QueryString extends string>({
-  query,
-  params = {},
-  revalidate = 60,
-  tags = [],
-}: {
-  query: QueryString;
-  params?: QueryParams;
-  revalidate?: number | false;
-  tags?: string[];
-}) {
-  if (!isSanityConfigured) return null;
-
-  return getClient().fetch(query, params, {
-    next: {
-      // Before (broken without webhook):
-      // revalidate: tags.length ? false : revalidate,
-
-      // After (time-based fallback, e.g. 60s):
-      revalidate: revalidate,
-      tags,
-    },
-  });
+  return client.fetch<T>(query, params);
 }
