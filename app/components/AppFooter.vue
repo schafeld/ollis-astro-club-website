@@ -12,7 +12,7 @@ const currentLocale = computed(() => (typeof route.params.locale === 'string' ? 
     <p class="mt-1">
       {{ t('footer.madeBy') }} ·
       <a
-        href="https://github.com/schafeld/ollis-astro-club--next-js"
+        href="https://github.com/schafeld/ollis-astro-club-website"
         target="_blank"
         rel="noreferrer"
         class="text-[var(--accent-blue)] underline hover:text-[var(--accent)]"

@@ -14,7 +14,7 @@ export function Footer() {
       <p className="mt-1">
         {t('madeBy')} ·{' '}
         <a
-          href="https://github.com/schafeld/ollis-astro-club--next-js"
+          href="https://github.com/schafeld/ollis-astro-club-website"
           target="_blank"
           rel="noreferrer"
           className="text-[var(--accent-blue)] underline hover:text-[var(--accent)]"
