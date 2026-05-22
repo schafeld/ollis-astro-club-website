@@ -1,0 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@700&family=Patrick+Hand&display=swap');
+
+:root {
+  --font-kalam: 'Kalam';
+  --font-patrick-hand: 'Patrick Hand';
+}
+
+body {
+  min-height: 100vh;
+}
