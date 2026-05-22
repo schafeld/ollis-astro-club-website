@@ -1,4 +1,4 @@
-export function useSanityEnv() {
+export function getSanityEnv() {
   const config = useRuntimeConfig();
 
   const projectId = config.public.sanityProjectId ?? '';

@@ -1,14 +1,8 @@
 import { createClient, type QueryParams } from '@sanity/client';
-import { useSanityEnv } from './env';
+import { getSanityEnv } from './env';
 
-export async function sanityFetch<T>({
-  query,
-  params = {},
-}: {
-  query: string;
-  params?: QueryParams;
-}) {
-  const { apiVersion, dataset, isSanityConfigured, projectId } = useSanityEnv();
+async function fetchFromSanity<T>(query: string, params: QueryParams = {}) {
+  const { apiVersion, dataset, isSanityConfigured, projectId } = getSanityEnv();
 
   if (!isSanityConfigured) {
     return null;
@@ -22,4 +16,24 @@ export async function sanityFetch<T>({
   });
 
   return client.fetch<T>(query, params);
+}
+
+export async function sanityFetch<T>({
+  query,
+  params = {},
+}: {
+  query: string;
+  params?: QueryParams;
+}) {
+  if (import.meta.client) {
+    return $fetch<T | null>('/api/sanity/query', {
+      method: 'POST',
+      body: {
+        query,
+        params,
+      },
+    });
+  }
+
+  return fetchFromSanity<T>(query, params);
 }
