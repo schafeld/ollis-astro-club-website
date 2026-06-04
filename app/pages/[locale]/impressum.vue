@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import PortableTextRenderer from '~~/app/components/sanity/PortableTextRenderer.vue';
 import { sanityFetch } from '~~/lib/sanity/client';
-import { IMPRESSUM_QUERY } from '~~/lib/sanity/queries';
 
 interface PortableTextBlock {
   _key?: string;
@@ -32,7 +31,7 @@ const { data } = await useAsyncData(
   () => `impressum-${routeLocale.value}`,
   () =>
     sanityFetch<ImpressumData>({
-      query: IMPRESSUM_QUERY,
+      queryId: 'impressum',
       params: { locale: routeLocale.value },
     }),
   {

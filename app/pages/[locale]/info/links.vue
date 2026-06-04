@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { sanityFetch } from '~~/lib/sanity/client';
-import { LINKS_QUERY } from '~~/lib/sanity/queries';
 
 interface LinkItem {
   _id: string;
@@ -39,7 +38,7 @@ const { data: links } = await useAsyncData(
   () => `links-${routeLocale.value}`,
   () =>
     sanityFetch<LinkItem[]>({
-      query: LINKS_QUERY,
+      queryId: 'links',
       params: { locale: routeLocale.value },
     }).then((result) => result ?? []),
   {

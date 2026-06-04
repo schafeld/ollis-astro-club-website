@@ -2,7 +2,6 @@
 import PortableTextRenderer from '~~/app/components/sanity/PortableTextRenderer.vue';
 import { sanityFetch } from '~~/lib/sanity/client';
 import { urlFor } from '~~/lib/sanity/image';
-import { NEWS_POST_QUERY } from '~~/lib/sanity/queries';
 
 interface SanityImage {
   asset?: { _ref: string };
@@ -44,7 +43,7 @@ const { data: post } = await useAsyncData(
   () => `news-post-${routeLocale.value}-${routeSlug.value}`,
   () =>
     sanityFetch<NewsPost>({
-      query: NEWS_POST_QUERY,
+      queryId: 'newsPost',
       params: { locale: routeLocale.value, slug: routeSlug.value },
     }),
   {
