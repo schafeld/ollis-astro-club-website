@@ -106,7 +106,7 @@ NEXT_PUBLIC_SANITY_API_VERSION=
 NASA_API_KEY=
 
 # Optional site metadata / compatibility
-NEXT_PUBLIC_SITE_URL=https://www.ollis-astro-club.com
+NUXT_PUBLIC_SITE_URL=https://www.ollis-astro-club.com
 ```
 
 ## Not Yet Migrated to Nuxt Root
