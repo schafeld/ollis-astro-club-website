@@ -39,7 +39,10 @@ export function getVideoEmbedUrl(url: string): VideoEmbedInfo {
   };
 }
 
-export async function getApod(): Promise<ApodData | null> {
+// Calls the NASA API directly. Only safe to run on the server, where the
+// NASA_API_KEY runtime secret is available; used by both the SSR render and
+// the `/api/nasa/apod` server route.
+export async function fetchApodFromNasa(): Promise<ApodData | null> {
   const config = useRuntimeConfig();
   const apiKey = config.nasaApiKey || NASA_DEMO_KEY;
 
@@ -56,4 +59,14 @@ export async function getApod(): Promise<ApodData | null> {
     console.error('Error fetching NASA APOD:', error);
     return null;
   }
+}
+
+export async function getApod(): Promise<ApodData | null> {
+  // On the client the server-only NASA key is unavailable, so route through the
+  // server endpoint to keep using the real key instead of the rate-limited DEMO_KEY.
+  if (import.meta.client) {
+    return $fetch<ApodData | null>('/api/nasa/apod');
+  }
+
+  return fetchApodFromNasa();
 }
