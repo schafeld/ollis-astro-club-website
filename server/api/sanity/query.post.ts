@@ -1,19 +1,26 @@
 import { createClient, type QueryParams } from '@sanity/client';
 import { createError, readBody } from 'h3';
 import { getSanityEnv } from '~~/lib/sanity/env';
+import { SANITY_QUERIES, type SanityQueryId } from '~~/lib/sanity/queries';
 
 interface SanityQueryRequest {
-  query?: unknown;
+  queryId?: unknown;
   params?: QueryParams;
 }
 
 export default defineEventHandler(async (event) => {
   const body = await readBody<SanityQueryRequest>(event);
 
-  if (typeof body?.query !== 'string' || body.query.trim().length === 0) {
+  // Only run queries from our allowlist — never an arbitrary GROQ string from the client.
+  const query =
+    typeof body?.queryId === 'string'
+      ? SANITY_QUERIES[body.queryId as SanityQueryId]
+      : undefined;
+
+  if (!query) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Missing Sanity query',
+      statusMessage: 'Unknown Sanity query',
     });
   }
 
@@ -30,5 +37,5 @@ export default defineEventHandler(async (event) => {
     useCdn: false,
   });
 
-  return client.fetch(body.query, body.params ?? {});
+  return client.fetch(query, body.params ?? {});
 });

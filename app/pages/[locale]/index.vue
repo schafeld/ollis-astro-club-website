@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { HOMEPAGE_QUERY } from '~~/lib/sanity/queries';
 import { sanityFetch } from '~~/lib/sanity/client';
 
 interface HomePageContent {
@@ -27,7 +26,7 @@ const { data } = await useAsyncData(
   () => `homepage-${routeLocale.value}`,
   () =>
     sanityFetch<HomePageContent>({
-      query: HOMEPAGE_QUERY,
+      queryId: 'homepage',
       params: { locale: routeLocale.value },
     }),
   {

@@ -1,5 +1,6 @@
 import { createClient, type QueryParams } from '@sanity/client';
 import { getSanityEnv } from './env';
+import { SANITY_QUERIES, type SanityQueryId } from './queries';
 
 async function fetchFromSanity<T>(query: string, params: QueryParams = {}) {
   const { apiVersion, dataset, isSanityConfigured, projectId } = getSanityEnv();
@@ -19,21 +20,21 @@ async function fetchFromSanity<T>(query: string, params: QueryParams = {}) {
 }
 
 export async function sanityFetch<T>({
-  query,
+  queryId,
   params = {},
 }: {
-  query: string;
+  queryId: SanityQueryId;
   params?: QueryParams;
 }) {
   if (import.meta.client) {
     return $fetch<T | null>('/api/sanity/query', {
       method: 'POST',
       body: {
-        query,
+        queryId,
         params,
       },
     });
   }
 
-  return fetchFromSanity<T>(query, params);
+  return fetchFromSanity<T>(SANITY_QUERIES[queryId], params);
 }

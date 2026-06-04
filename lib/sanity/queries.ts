@@ -48,3 +48,19 @@ export const IMPRESSUM_QUERY = `
     "body": body[$locale]
   }
 `;
+
+/**
+ * Allowlist of the only GROQ queries that may be executed on behalf of a client.
+ * The public-facing `/api/sanity/query` endpoint and `sanityFetch` accept a
+ * `queryId` from this map rather than a raw query string, so visitors can only
+ * run queries we have explicitly shipped — not arbitrary GROQ against the dataset.
+ */
+export const SANITY_QUERIES = {
+  homepage: HOMEPAGE_QUERY,
+  newsList: NEWS_LIST_QUERY,
+  newsPost: NEWS_POST_QUERY,
+  links: LINKS_QUERY,
+  impressum: IMPRESSUM_QUERY,
+} as const;
+
+export type SanityQueryId = keyof typeof SANITY_QUERIES;

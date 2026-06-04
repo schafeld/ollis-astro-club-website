@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { NEWS_LIST_QUERY } from '~~/lib/sanity/queries';
 import { sanityFetch } from '~~/lib/sanity/client';
 import { urlFor } from '~~/lib/sanity/image';
 
@@ -35,7 +34,7 @@ const { data: posts } = await useAsyncData(
   () => `news-${routeLocale.value}`,
   () =>
     sanityFetch<NewsPost[]>({
-      query: NEWS_LIST_QUERY,
+      queryId: 'newsList',
       params: { locale: routeLocale.value },
     }).then((result) => result ?? []),
   {
