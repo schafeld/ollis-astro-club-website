@@ -1,4 +1,4 @@
-export const HOMEPAGE_QUERY = `
+const HOMEPAGE_QUERY = `
   *[_type == "homepage"][0]{
     "title": title[$locale],
     "subtitle": subtitle[$locale],
@@ -6,7 +6,7 @@ export const HOMEPAGE_QUERY = `
   }
 `;
 
-export const NEWS_LIST_QUERY = `
+const NEWS_LIST_QUERY = `
   *[_type == "newsPost" && defined(slug.current)]
   | order(publishedAt desc)[0...20]{
     _id,
@@ -18,7 +18,7 @@ export const NEWS_LIST_QUERY = `
   }
 `;
 
-export const NEWS_POST_QUERY = `
+const NEWS_POST_QUERY = `
   *[_type == "newsPost" && slug.current == $slug][0]{
     _id,
     "title": title[$locale],
@@ -31,7 +31,7 @@ export const NEWS_POST_QUERY = `
   }
 `;
 
-export const LINKS_QUERY = `
+const LINKS_QUERY = `
   *[_type == "link"] | order(sortOrder asc, title.de asc){
     _id,
     "title": title[$locale],
@@ -42,7 +42,7 @@ export const LINKS_QUERY = `
   }
 `;
 
-export const IMPRESSUM_QUERY = `
+const IMPRESSUM_QUERY = `
   *[_type == "impressum"][0]{
     "title": title[$locale],
     "body": body[$locale]

@@ -1,6 +1,6 @@
-import { createClient, type QueryParams } from '@sanity/client';
+import { type QueryParams } from '@sanity/client';
 import { createError, readBody } from 'h3';
-import { getSanityEnv } from '~~/lib/sanity/env';
+import { fetchFromSanity } from '~~/lib/sanity/client';
 import { SANITY_QUERIES, type SanityQueryId } from '~~/lib/sanity/queries';
 
 interface SanityQueryRequest {
@@ -24,18 +24,5 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const { apiVersion, dataset, isSanityConfigured, projectId } = getSanityEnv();
-
-  if (!isSanityConfigured) {
-    return null;
-  }
-
-  const client = createClient({
-    projectId,
-    dataset,
-    apiVersion,
-    useCdn: false,
-  });
-
-  return client.fetch(query, body.params ?? {});
+  return fetchFromSanity(query, body.params ?? {});
 });

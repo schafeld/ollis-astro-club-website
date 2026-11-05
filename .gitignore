@@ -58,3 +58,6 @@ next-env.d.ts
 # AI
 /AI_DOCS/DESIGN.md
 /AI_DOCS/NOTES.md
+
+# slideshow image cache (downloaded copies of third-party images; never commit)
+/docs/slideshows/media/

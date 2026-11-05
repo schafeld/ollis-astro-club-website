@@ -29,7 +29,7 @@ The GitHub Actions workflow in `.github/workflows/deploy.yml` deploys by SSH to 
 | `SANITY_API_TOKEN` | Optional | Needed only for server-side mutations or tooling |
 | `NASA_API_KEY` | Recommended | NASA API key for APOD; `DEMO_KEY` fallback is used in dev if missing |
 | `DATABASE_URL` | Later | Reserved for future database-backed features |
-| `NEXT_PUBLIC_SITE_URL` | Recommended | Public site URL retained for compatibility |
+| `NUXT_PUBLIC_SITE_URL` | Recommended | Public site URL for Nuxt runtime/public config |
 
 ## Important Build-Time Behavior
 
@@ -61,7 +61,7 @@ NEXT_PUBLIC_SANITY_DATASET=production
 NASA_API_KEY=your-nasa-key
 
 # Compatibility / general app metadata
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NUXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
 ## VPS Setup
@@ -99,7 +99,7 @@ NEXT_PUBLIC_SANITY_DATASET=production
 NASA_API_KEY=<your-nasa-api-key>
 
 # Optional compatibility metadata
-NEXT_PUBLIC_SITE_URL=https://www.ollis-astro-club.com
+NUXT_PUBLIC_SITE_URL=https://www.ollis-astro-club.com
 
 # Future auth / database values may stay present even if Nuxt does not use them yet
 AUTH0_SECRET=<future>

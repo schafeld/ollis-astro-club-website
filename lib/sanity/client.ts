@@ -2,7 +2,7 @@ import { createClient, type QueryParams } from '@sanity/client';
 import { getSanityEnv } from './env';
 import { SANITY_QUERIES, type SanityQueryId } from './queries';
 
-async function fetchFromSanity<T>(query: string, params: QueryParams = {}) {
+export async function fetchFromSanity<T>(query: string, params: QueryParams = {}) {
   const { apiVersion, dataset, isSanityConfigured, projectId } = getSanityEnv();
 
   if (!isSanityConfigured) {

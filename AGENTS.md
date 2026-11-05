@@ -19,6 +19,7 @@ This repository root now contains the primary Nuxt 4 application for Ollis Astro
 - `npm run build` is the required validation command after any meaningful route or config change.
 - `npm run start` serves the built Nuxt Nitro server and is the command used by PM2 in deployment.
 - `npm run preview` runs the production output locally.
+- `npm run slides -- <deck.md>` builds a Markdown file into a single-file HTML slideshow (zero-dependency script in `docs/slideshows/`, independent of the Nuxt app; see `docs/slideshows/README.md`).
 
 ## Current Architecture
 
@@ -29,6 +30,13 @@ This repository root now contains the primary Nuxt 4 application for Ollis Astro
 - Runtime config and Sanity env mapping: `lib/sanity/env.ts`
 - Sanity client, queries, and image helper: `lib/sanity/client.ts`, `lib/sanity/queries.ts`, `lib/sanity/image.ts`
 - Portable Text renderer: `app/components/sanity/PortableTextRenderer.vue`
+
+## Open-Source Copyright Rule (hard rule)
+
+- This repository is open source. **Never add anything copyrighted or requiring attribution** (CC BY, CC BY-SA, "free with credit", agency/press photos, logos, patches, copied text, fonts, etc.) – neither as files nor as referenced URLs/embedded media.
+- Only public domain / CC0 material or original work may be committed. Verify the licence on the original file page (e.g. Wikimedia Commons licence box), never from memory or search snippets.
+- Slideshow decks in `docs/slideshows/` must state a public-domain licence in every `<!-- source: … -->`; the build script rejects anything else. Downloaded media (`docs/slideshows/media/`) is a git-ignored cache and must never be committed. Do not use `--allow-attribution` for committed output.
+- If no public-domain asset exists, use a text-only slide or ask the user instead of using a restricted one.
 
 ## Migration Rules
 
