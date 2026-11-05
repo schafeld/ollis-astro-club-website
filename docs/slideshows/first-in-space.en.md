@@ -105,6 +105,8 @@ Together with Valery Bykovsky he flew to the space station "Salyut 6" and stayed
 
 # Yang Liwei – the first Chinese in space
 
+![Shenzhou 5 return capsule and Yang Liwei's spacesuit in a museum](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/098_Shenzhou_V_Re-entry_Vehicle_and_Spacesuit_Used_by_Yang_Liwei.jpg/1280px-098_Shenzhou_V_Re-entry_Vehicle_and_Spacesuit_Used_by_Yang_Liwei.jpg)
+<!-- source: Shenzhou 5 return capsule and Yang Liwei's spacesuit (National Museum of China) – Gary Lee Todd (Wikimedia Commons) | https://commons.wikimedia.org/wiki/File:098_Shenzhou_V_Re-entry_Vehicle_and_Spacesuit_Used_by_Yang_Liwei.jpg | CC0 (Public Domain Dedication) -->
 <!-- year: 15 October 2003 -->
 
 Spaceship: **Shenzhou 5** ("Divine Vessel").

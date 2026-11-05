@@ -105,6 +105,8 @@ Gemeinsam mit Waleri Bykowski flog er zur Raumstation „Salut 6“ und blieb ru
 
 # Yang Liwei – der erste Chinese im All
 
+![Landekapsel von Shenzhou 5 und Raumanzug von Yang Liwei im Museum](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/098_Shenzhou_V_Re-entry_Vehicle_and_Spacesuit_Used_by_Yang_Liwei.jpg/1280px-098_Shenzhou_V_Re-entry_Vehicle_and_Spacesuit_Used_by_Yang_Liwei.jpg)
+<!-- source: Landekapsel von Shenzhou 5 und Raumanzug von Yang Liwei (Nationalmuseum China) – Gary Lee Todd (Wikimedia Commons) | https://commons.wikimedia.org/wiki/File:098_Shenzhou_V_Re-entry_Vehicle_and_Spacesuit_Used_by_Yang_Liwei.jpg | CC0 (Public Domain Dedication) -->
 <!-- year: 15. Oktober 2003 -->
 
 Raumschiff: **Shenzhou 5** („Götterschiff“).

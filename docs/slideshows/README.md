@@ -50,7 +50,7 @@ press photos, logos, mission patches under trademark, …) may be referenced her
   under CC BY-SA IGO, anything "used with permission", AI-generated images of real people.
 - Prefer US-government/NASA material; stamps and other items tagged public domain by Commons rely on
   Commons' determination – if an uploader or rights holder objects, remove the image.
-- If no suitable public-domain image exists, make the slide text-only (see the Yang Liwei slide) or
+- If no suitable public-domain image exists, make the slide text-only or
   link to the source page in the text instead of embedding a picture.
 - `--allow-attribution` switches the check off for **private** decks (e.g. your own talk, kept outside git).
   Don't commit the resulting `.md`, `.html` or `media/` files.
@@ -108,4 +108,5 @@ swipe, and URL hashes (`…html#5` jumps to slide 5) also work. Printing gives o
 All pictures are referenced from Wikimedia Commons or NASA and are tagged **public domain**: NASA photos
 (Sputnik 1, Freedom 7, Friendship 7, Apollo 11, Crew Dragon/ISS) and Soviet postage stamps (1961, 1963, 1965, 1978)
 as determined by Commons. The exact file page of each is in the slide's ⓘ box and in the `source:` comment.
-The Yang Liwei slide is text-only because no suitable public-domain picture was found.
+The Yang Liwei slide uses a museum photo of the Shenzhou 5 capsule and spacesuit, released by its photographer
+(Gary Lee Todd) under **CC0**.
