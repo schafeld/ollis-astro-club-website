@@ -2,13 +2,15 @@
   "name": "ollis-astro-club-nuxt",
   "type": "module",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "start": "node .output/server/index.mjs",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "slides": "node docs/slideshows/build-slideshow.mjs"
   },
   "dependencies": {
     "@nuxtjs/color-mode": "^4.0.0",
