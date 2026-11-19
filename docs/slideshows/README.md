@@ -18,6 +18,8 @@ Open the generated `.html` in any browser (double-click is fine) and press **F**
 | --- | --- |
 | `first-in-space.de.md` / `.html` | "Wer waren die ersten Menschen im Weltraum?" – for a 4th-grade audience (German) |
 | `first-in-space.en.md` / `.html` | Same deck in English |
+| `voyager-1.de.md` / `.html` | „Voyager 1 – einen Lichttag von zu Hause entfernt“ (Nov 2026): discoveries, the probe, Carl Sagan & the Golden Record, walnut scale model of the solar system – 4th grade (German) |
+| `voyager-1.en.md` / `.html` | Same deck in English |
 
 ## Images: URL first, local copy for offline
 
@@ -110,3 +112,8 @@ All pictures are referenced from Wikimedia Commons or NASA and are tagged **publ
 as determined by Commons. The exact file page of each is in the slide's ⓘ box and in the `source:` comment.
 The Yang Liwei slide uses a museum photo of the Shenzhou 5 capsule and spacesuit, released by its photographer
 (Gary Lee Todd) under **CC0**.
+
+The Voyager decks use only NASA/JPL (and USGS) images tagged **public domain** on Commons: the Voyager painting,
+the Titan-Centaur launch, Voyager 1 at KSC, Earth & Moon (PIA00013), the Great Red Spot (PIA00022), Io's Loki plume,
+crescent Saturn, Carl Sagan with Mariner 9 photos (P-13734B), the Golden Record cover, Pale Blue Dot, and the
+2012 heliosphere illustration. The walnut scale-model numbers and their formula are in the speaker notes.
